@@ -1,0 +1,45 @@
+include:
+  - project: 'AgileFactory/Witboost.Mesh/witboost.Mesh.CI'
+    ref: 'main'
+    file: 'common/witboost.helm.gitlab-ci.yml'
+
+stages:
+  - setup
+  - check
+  - publish
+
+setup:
+  stage: setup
+  extends: .witboost.helm.base-job
+  cache: []
+  before_script: []
+  script:
+    - !reference [.witboost.helm.clone-scripts, script]
+    - !reference [.witboost.helm.get-version, script]
+    - echo "VERSION=${VERSION}" >> vars.env
+  artifacts:
+    reports:
+      dotenv: vars.env
+
+witboost.helm.checks:
+  stage: check
+  extends: .witboost.helm.base-job
+  before_script: []
+  cache: []
+  script:
+    - !reference [.witboost.helm.clone-scripts, script]
+    - !reference [.witboost.helm.checks, script]
+  variables:
+    CHART_FOLDER: .
+
+witboost.helm.deploy:
+  stage: publish
+  before_script: []
+  cache: []
+  extends: .witboost.helm.deploy
+  variables:
+    CHART_FOLDER: .
+#  only:
+#    - master
+#    - tags
+#    - /(^release\/([0-9]+)\.([0-9]+))/

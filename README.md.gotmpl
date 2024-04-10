@@ -49,11 +49,7 @@ We recommend to have a different Storage Account where Terraform can save the re
 The module is packaged as an **Helm Chart**.
 It must be deployed as part of an **Umbrella Chart** along with the Terraform Specific Provisioner and, eventually, other modules.
 
-## Values
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| enabled | bool | `true` | Include the TF module to create a ADLS Gen2 container |
+{{ template "chart.valuesSection" . }}
 
 ## License
 
