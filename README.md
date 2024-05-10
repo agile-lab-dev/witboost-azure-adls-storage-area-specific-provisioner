@@ -19,12 +19,14 @@ This repository is part of our [Starter Kit](https://github.com/agile-lab-dev/wi
 
 ## Overview
 
-This project allows to provision an ADLS Gen2 `container` on a pre-existing Azure Storage Account. The storage account must have the `Hierarchical namespace` option enabled.
+This project allows to provision an Azure `Storage Account` and one or more ADLS Gen2 `container` inside it.
 The Terraform configuration files can be found inside the [files](files) folder.
 
 It's a module ready to be used by our OSS [Terraform Specific Provisioner](https://github.com/agile-lab-dev/witboost-terraform-scaffold).
 
 ## Configuring
+
+The `Resource Group` where to publish the Storage Account must already exist.
 
 ### Environment variables
 
@@ -36,7 +38,40 @@ To authenticate on Azure using a Service Principal with a Client Secret, the fol
 
 ### Example configuration for the Terraform SP
 
-TODO
+```
+  terraform {
+    "urn:dmb:utm:azure-storage-adlsgen2-template:0.0.0" {
+      repositoryPath: "/tf/adlsgen2"
+      descriptorToVariablesMapping: {
+        dp_domain = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.component.dpDomain"
+        dp_name_major_version = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.component.dpNameMajorVersion"
+        component_name = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.component.name"
+        resource_group = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.resourceGroup"
+        storage_account_name = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.storageAccount"
+        account_tier = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.performance"
+        account_replication_type = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.redundancy"
+        access_tier = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.accessTier"
+        infrastructure_encryption_enabled = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.infrastructureEncryptionEnabled"
+        allow_nested_items_to_be_public = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.allowNestedItemsToBePublic"
+        containers = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.containers"
+      }
+      principalMappingPlugin {
+           pluginClass: "it.agilelab.plugin.principalsmapping.impl.azure.AzureMapperFactory"
+           azure: {
+              tenantId: ${?PRINCIPAL_MAPPING_TENANT_ID}
+              clientId: ${?PRINCIPAL_MAPPING_CLIENT_ID}
+              clientSecret: ${?PRINCIPAL_MAPPING_CLIENT_SECRET}
+           }
+      }
+      backendConfigs: {
+        stateKey = "key"
+        configs = {
+          key = "$.dataProduct.components[?(@.id == '{{componentIdToProvision}}')].specific.state.key"
+        }
+      }
+    }
+  }
+```
 
 To learn more about the configuration parameters, please refer to the [documentation](https://github.com/agile-lab-dev/witboost-terraform-scaffold?tab=readme-ov-file#configuring) of the Terraform Specific Provisioner.
 
@@ -53,7 +88,11 @@ It must be deployed as part of an **Umbrella Chart** along with the Terraform Sp
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| enabled | bool | `true` | Include the TF module to create a ADLS Gen2 container |
+| enabled | bool | `true` | Include the TF module to create the Storage Account |
+| state | object | `{"container_name":"","resource_group_name":"","storage_account_name":""}` | Terraform Remote State configuration |
+| state.container_name | string | `""` | The Name of the Storage Container within the Storage Account |
+| state.resource_group_name | string | `""` | The Name of the Resource Group in which the Storage Account exists |
+| state.storage_account_name | string | `""` | The Name of the Storage Account |
 
 ## License
 

@@ -1,8 +1,8 @@
 apiVersion: v2
 name: adls-gen2
 description: >
-  A terraform module that can be used by the Terraform Specific Provisioner to create an ADLS Gen2 container 
-  within an Azure Storage Account
+  A terraform module that can be used by the Terraform Specific Provisioner to create an Azure Storage Account and 
+  one or more ADLS Gen2 container inside it 
 
 # A chart can be either an 'application' or a 'library' chart.
 #

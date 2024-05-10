@@ -6,5 +6,5 @@ metadata:
   labels:
     {{- include "adls-gen2.labels" . | nindent 4 }}
 data:
-  {{- (.Files.Glob "files/*.tf").AsConfig | nindent 2 }}
+  {{- tpl (.Files.Glob "files/*.tf").AsConfig . | nindent 2 }}
 {{ end }}
