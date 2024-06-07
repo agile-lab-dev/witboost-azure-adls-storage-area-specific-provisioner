@@ -3,11 +3,6 @@ variable "resource_group" {
   description = "The name of the resource group in which to create the storage account"
 }
 
-variable "storage_account_name" {
-  type        = string
-  description = "Specifies the name of the storage account. Only lowercase Alphanumeric characters allowed"
-}
-
 variable "account_tier" {
   type        = string
   description = "Defines the Tier to use for this storage account. Valid options are Standard and Premium"
@@ -57,4 +52,9 @@ variable "dp_name_major_version" {
 variable "component_name" {
   type        = string
   description = "The Witboost component name"
+}
+
+variable "environment" {
+  type        = string
+  description = "The deployment environment"
 }

@@ -3,7 +3,7 @@ data "azurerm_resource_group" "azure_adls_rs" {
 }
 
 resource "azurerm_storage_account" "storage_account" {
-  name                              = var.storage_account_name
+  name                              = local.storage_account_name
   resource_group_name               = data.azurerm_resource_group.azure_adls_rs.name
   location                          = data.azurerm_resource_group.azure_adls_rs.location
   account_kind                      = "StorageV2"
@@ -18,6 +18,7 @@ resource "azurerm_storage_account" "storage_account" {
     domain                = var.dp_domain
     dp_name_major_version = var.dp_name_major_version
     component_name        = var.component_name
+    environment           = var.environment
   }
 }
 
@@ -30,6 +31,9 @@ locals {
       role  = pair[1]
     }
   ]
+  storage_account_name_hash   = sha256("${var.dp_domain}-${var.dp_name_major_version}-${var.component_name}-${var.environment}")
+  storage_account_name_prefix = replace(replace(lower(var.component_name), "/\\W/", ""), "_", "")
+  storage_account_name        = "${substr(local.storage_account_name_prefix, 0, 18)}${substr(lower(local.storage_account_name_hash), 0, 6)}"
 }
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "filesystem" {

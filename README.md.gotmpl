@@ -47,7 +47,7 @@ To authenticate on Azure using a Service Principal with a Client Secret, the fol
         dp_name_major_version = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.component.dpNameMajorVersion"
         component_name = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.component.name"
         resource_group = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.resourceGroup"
-        storage_account_name = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.storageAccount"
+        environment = "$.dataProduct.environment"
         account_tier = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.performance"
         account_replication_type = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.redundancy"
         access_tier = "$.dataProduct.components[?(@.id == '{{`{{componentIdToProvision}}`}}')].specific.accessTier"
