@@ -29,7 +29,7 @@ variable "allow_nested_items_to_be_public" {
 }
 
 variable "containers" {
-  type        = string
+  type        = list(string)
   description = "The names of the Data Lake Gen2 File Systems which should be created within the Storage Account"
 }
 

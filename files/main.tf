@@ -23,7 +23,6 @@ resource "azurerm_storage_account" "storage_account" {
 }
 
 locals {
-  containers_array       = compact(split(",", var.containers))
   owner_principals_array = split(",", var.ownerPrincipals)
   owners_roles = [
     for pair in setproduct(local.owner_principals_array, ["Storage Blob Data Owner", "Reader"]) : {
@@ -37,7 +36,7 @@ locals {
 }
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "filesystem" {
-  for_each           = toset(local.containers_array)
+  for_each           = toset(var.containers)
   name               = each.key
   storage_account_id = azurerm_storage_account.storage_account.id
 }
